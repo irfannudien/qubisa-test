@@ -24,6 +24,7 @@ import { enqueueSnackbar } from "notistack";
 import { useRouter } from "next/navigation";
 import SignInModal from "./SignInModal";
 import SearchPopup from "./SearchPopup";
+import Link from "next/link";
 
 interface MenuFlag {
   name: string;
@@ -125,7 +126,31 @@ export default function HeaderMobile() {
         }}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b">
-          <span className="text-lg font-semibold">Menu</span>
+          {user ? (
+            <div className="flex items-center gap-3">
+              {user.fullPath ? (
+                <Image
+                  src={user.fullPath}
+                  alt="User Avatar"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              ) : (
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-[#BF1E2E] text-white font-bold">
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <div>
+                <span className="block font-semibold">{user.name}</span>
+                <span className="block text-xs text-gray-500">
+                  {user.email}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <span className="text-lg font-semibold">Menu</span>
+          )}
           <IconButton onClick={() => setOpen(false)}>
             <Close sx={{ fontSize: 26, color: "#373737" }} />
           </IconButton>
@@ -166,6 +191,18 @@ export default function HeaderMobile() {
             </>
           )}
 
+          {user && (
+            <>
+              <ListItemButton>
+                <div className="w-full flex justify-between items-center hover:text-[#BF1E2E]">
+                  <Link href="#">ProfilQu</Link>
+                  <ChevronRight sx={{ fontSize: 20, color: "#373737" }} />
+                </div>
+              </ListItemButton>
+              <Divider />
+            </>
+          )}
+
           {menus?.map((menu: Menu, idx: number) => {
             const isLastMenu = idx === menus.length - 1;
             const isExpanded = expandedIndex === idx;
@@ -176,7 +213,7 @@ export default function HeaderMobile() {
                   <ListItemText
                     primary={
                       <span
-                        className={`flex items-center gap-2 ${
+                        className={`flex items-center gap-2 hover:text-[#BF1E2E] ${
                           isExpanded ? "text-[#BF1E2E]" : "text-[#373737]"
                         }
                 `}
@@ -228,14 +265,16 @@ export default function HeaderMobile() {
                             </span>
                           )
                         ) : (
-                          <a
-                            href={sub.actionUrl || "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block hover:text-[#BF1E2E]"
-                          >
-                            {sub.name}
-                          </a>
+                          <div className="w-full hover:text-[#BF1E2E]">
+                            <Link
+                              href={sub.actionUrl || "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block"
+                            >
+                              {sub.name}
+                            </Link>
+                          </div>
                         )}
                       </ListItemButton>
                     ))}
