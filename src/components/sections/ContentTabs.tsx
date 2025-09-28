@@ -101,7 +101,7 @@ export default function ContentTabs() {
             <button
               key={tab.name}
               onClick={() => setActiveTab(tab.name)}
-              className={`px-2 py-1 md:px-4 md:py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 text-xs md:text-md font-medium ${
+              className={`px-2 py-1 md:px-4 md:py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 text-xs md:text-md lg:text-lg font-medium ${
                 activeTab === tab.name
                   ? "text-[#BF1E2E] border-b-[#BF1E2E]"
                   : "text-[#373737] hover:border-b-[#BF1E2E]"
