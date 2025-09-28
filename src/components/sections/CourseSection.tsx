@@ -82,6 +82,7 @@ export default function CourseSection() {
   const [activeTab, setActiveTab] = useState<"Terbaru" | "Terpopuler">(
     "Terbaru"
   );
+  const [isMobile, setIsMobile] = useState(false);
 
   if (!section) return null;
 
@@ -98,8 +99,6 @@ export default function CourseSection() {
         new Date(a.updatedDateTime ?? "").getTime()
     );
   }, [activeTab, section.contents]);
-
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkScreen = () => setIsMobile(window.innerWidth < 1024);
