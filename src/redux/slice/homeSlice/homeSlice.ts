@@ -31,14 +31,13 @@ const initialState: HomeState = {
   error: null,
 };
 
-// Async thunk untuk ambil data dari API home
 export const fetchHomeData = createAsyncThunk(
   "home/fetchHomeData",
   async (_, { rejectWithValue }) => {
     try {
       const response = await homeAPI.getHomeData();
       console.log("API response.result:", response.result);
-      return response.result; // Misalnya kita ambil 'result' dari response
+      return response.result;
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Gagal mengambil data"

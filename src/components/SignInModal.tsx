@@ -1,9 +1,8 @@
 "use client";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { loginUser } from "@/redux/slice/auth/authSlice";
-import Modal from "./elements/Modal";
+
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper";
@@ -27,6 +26,7 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 import { useSnackbar } from "notistack";
+import Modal from "./elements/Modal";
 
 interface Props {
   isOpen: boolean;
@@ -38,7 +38,6 @@ interface SignInValues {
   password: string;
 }
 
-// ====== COMPONENTS ======
 const EmailField = () => (
   <Field name="email">
     {({ field, meta }: FieldProps) => (
@@ -174,7 +173,6 @@ const SocialLoginButton = ({
   </Button>
 );
 
-// ====== MAIN COMPONENT ======
 export default function SignInModal({ isOpen, onClose }: Props) {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state) => state.auth);
@@ -194,10 +192,21 @@ export default function SignInModal({ isOpen, onClose }: Props) {
 
   const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.documentElement.classList.add("overflow-hidden");
+    } else {
+      document.documentElement.classList.remove("overflow-hidden");
+    }
+    return () => document.documentElement.classList.remove("overflow-hidden");
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="w-full bg-white flex justify-between gap-10 overflow-hidden">
-        <div className="w-[50%]">
+      <div className="w-full bg-white flex flex-col md:flex-row justify-between gap-4 md:gap-10 overflow-hidden z-50">
+        <div className="w-full md:w-1/2 hidden md:flex justify-center items-center">
           <Swiper
             modules={[Pagination, Autoplay]}
             pagination={{ clickable: true }}
@@ -218,13 +227,13 @@ export default function SignInModal({ isOpen, onClose }: Props) {
           </Swiper>
         </div>
 
-        <div className="w-[50%] flex justify-center items-center">
-          <div className="max-w-xs space-y-4">
-            <div className="text-center space-y-2 px-2">
-              <h3 className="text-3xl font-bold text-[#373737]">
+        <div className="w-full md:w-1/2 flex justify-center items-center">
+          <div className="max-w-xs space-y-4 px-2 md:px-4 py-4 md:py-2">
+            <div className="text-center space-y-2">
+              <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-[#373737]">
                 Siap Belajar? Mulai Sekarang
               </h3>
-              <p className="text-[#373737] text-sm">
+              <p className="text-[#373737] text-xs">
                 Masukkan email atau nomor handphone untuk masuk ke akun Kamu
               </p>
             </div>
