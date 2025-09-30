@@ -7,7 +7,6 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { useAppSelector } from "@/redux/store";
 import Link from "next/link";
-import Rating from "../elements/Rating";
 
 interface Instructor {
   id: number;
@@ -21,14 +20,6 @@ interface Program {
   shortName?: string;
   colorHex?: string;
   imageUrl?: string;
-}
-
-interface Price {
-  isFree: boolean;
-  initialPrice: number;
-  initialPriceString: string;
-  finalPrice: number;
-  finalPriceString: string;
 }
 
 interface SkillLevel {
@@ -47,10 +38,8 @@ interface ContentItem {
   id: number;
   title: string;
   imageThumbUrl?: string;
-  rating?: { avg: number; count: number };
   eventDateString?: string;
   program?: Program;
-  price?: Price;
   skillLevel?: SkillLevel;
   instructors?: Instructor[];
   category?: Category;
@@ -95,7 +84,7 @@ export default function MicroLearningSection() {
         <div className="flex">
           <button
             onClick={() => setActiveTab("Terbaru")}
-            className={`px-4 py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 font-medium text-xs md:text-md lg:text-lg ${
+            className={`px-4 py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 font-medium text-xs md:text-base lg:text-lg ${
               activeTab === "Terbaru"
                 ? "text-[#BF1E2E] border-b-[#BF1E2E]"
                 : "text-[#373737] hover:border-b-[#BF1E2E]"
@@ -105,7 +94,7 @@ export default function MicroLearningSection() {
           </button>
           <button
             onClick={() => setActiveTab("Terpopuler")}
-            className={`px-4 py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 text-md font-medium text-xs md:text-md lg:text-lg ${
+            className={`px-4 py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 font-medium text-xs md:text-base lg:text-lg ${
               activeTab === "Terpopuler"
                 ? "text-[#BF1E2E] border-b-[#BF1E2E]"
                 : "text-[#373737] hover:border-b-[#BF1E2E]"
@@ -143,25 +132,34 @@ export default function MicroLearningSection() {
           <Swiper
             modules={[Navigation, Pagination]}
             navigation={!isMobile}
-            spaceBetween={24}
-            slidesPerView={3}
+            spaceBetween={16}
             loop
+            breakpoints={{
+              0: {
+                slidesPerView: 2.3,
+              },
+
+              640: {
+                slidesPerView: 2.8,
+              },
+
+              1024: {
+                slidesPerView: 3,
+              },
+            }}
             className="h-full swiper-product"
           >
             {section.contents.length ? (
               section.contents.map((item) => (
-                <SwiperSlide
-                  key={item.id}
-                  className="!w-[80%] sm:!w-[250px] md:!w-[300px]"
-                >
-                  <div className="flex flex-col h-full bg-white rounded-lg shadow-sm border-gray-400 p-4 gap-2">
-                    <div className="relative w-full h-40 flex-shrink-0">
+                <SwiperSlide key={item.id}>
+                  <div className="flex flex-col w-full h-[350px] md:h-[400px] lg:h-full bg-white rounded-lg shadow-sm border-gray-400 p-1 md:p-2 lg:p-3 gap-2 sm:gap-3">
+                    <div className="relative w-full h-25 md:h-30 lg:h-40 flex-shrink-0">
                       {item.imageThumbUrl ? (
                         <Image
                           src={item.imageThumbUrl}
                           alt={item.title}
                           fill
-                          className="object-cover rounded"
+                          className="w-full h-full object-cover rounded"
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-100 flex items-center justify-center">
@@ -170,62 +168,66 @@ export default function MicroLearningSection() {
                       )}
                     </div>
 
-                    <div className="flex-1 flex flex-col justify-between">
-                      <div className="space-y-2">
-                        {item.program && (
-                          <span
-                            className="px-2 py-0.5 rounded-md text-xs font-semibold text-white"
-                            style={{
-                              backgroundColor:
-                                item.program.colorHex || "#BF1E2E",
-                            }}
-                          >
-                            {item.program.shortName}
-                          </span>
-                        )}
-
-                        <div className="cursor-pointer h-[74px] lg:max-h-[112px]">
-                          <h3 className="text-md font-medium line-clamp-2">
-                            {item.title}
-                          </h3>
-                        </div>
-
-                        <div className="flex text-xs lg:text-sm lg:leading-6 text-blackBorder max-h-[28px] my-4 line-clamp-2 overflow-hidden text-ellipsis whitespace-nowrap">
-                          {item.numberOfContents} Video | {item.hitRate} views
-                        </div>
-
-                        <div className="flex flex-col gap-5">
-                          {item.instructors && item.instructors.length > 0 && (
-                            <div className="flex items-center gap-2 mt-1">
-                              {item.instructors[0].profilePic && (
-                                <Image
-                                  src={item.instructors[0].profilePic}
-                                  alt={item.instructors[0].name}
-                                  width={24}
-                                  height={24}
-                                  className="rounded-full"
-                                />
-                              )}
-                              <div className="max-w-[225px]">
-                                <p className="overflow-hidden text-ellipsis whitespace-nowrap max-h-4 md:max-h-5 text-xs lg:text-sm font-semibold text-blackBorder text-left">
-                                  {item.instructors[0].name}
-                                </p>
-                                {item.instructors[0].qualification && (
-                                  <p className="text-xs hidden lg:block text-blackBorder max-h-4 overflow-hidden text-left">
-                                    {item.instructors[0].qualification}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
+                    <div className="flex flex-col gap-1 md:gap-2 ">
+                      <div className="h-25 lg:h-18 flex flex-col gap-1">
+                        <div className="flex flex-wrap gap-1 md:gap-2">
+                          {item.program && (
+                            <span
+                              className="text-[8px] md:text-[10px] px-2 py-0.5 rounded-lg text-white"
+                              style={{
+                                backgroundColor: item.program.colorHex,
+                              }}
+                            >
+                              {item.program.shortName}
+                            </span>
                           )}
 
-                          <div className="mt-3">
-                            <Link
-                              href={`/`}
-                              className="block w-full text-left py-2 text-md md:text-lg font-semibold"
-                            >
-                              Lihat Sekarang
-                            </Link>
+                          <div className="cursor-pointer h-[50px] md:h-[60px] lg:h-[112px]">
+                            <h3 className="text-sm lg:text-lg lg:leading-6 font-medium line-clamp-3">
+                              {item.title}
+                            </h3>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1 md:gap-3 lg:gap-5">
+                          <div className="flex text-xs lg:text-sm lg:leading-6  max-h-[28px] my-4 line-clamp-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                            {item.numberOfContents} Video | {item.hitRate} views
+                          </div>
+
+                          <div className="flex flex-col gap-5">
+                            {item.instructors &&
+                              item.instructors.length > 0 && (
+                                <div className="flex items-center gap-2 mt-1">
+                                  {item.instructors[0].profilePic && (
+                                    <Image
+                                      src={item.instructors[0].profilePic}
+                                      alt={item.instructors[0].name}
+                                      width={24}
+                                      height={24}
+                                      className="rounded-full w-8 h-8"
+                                    />
+                                  )}
+                                  <div className="w-full">
+                                    <p className="line-clamp-1 lg:line-clamp-none max-h-4 md:max-h-5 text-xs md:text-sm lg:text-sm font-semibold text-left">
+                                      {item.instructors[0].name}
+                                    </p>
+                                    {item.instructors[0].qualification && (
+                                      <p className="text-[10px] sm:text-xs hidden lg:block  max-h-4 overflow-hidden text-left">
+                                        {item.instructors[0].qualification}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                            <div className="mt-3">
+                              <Link
+                                href={`/`}
+                                className="block w-full text-left lg:py-2 text-sm md:text-lg font-semibold"
+                              >
+                                Lihat Sekarang
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </div>

@@ -4,7 +4,7 @@ interface RatingProps {
 
 export default function Rating({ rating }: RatingProps) {
   return (
-    <div className="flex items-center text-yellow-500 py-2">
+    <div className="flex items-center text-yellow-500 py-0 md:pt-2 lg:pt-8">
       {[...Array(5)].map((_, i) => (
         <svg
           key={i}

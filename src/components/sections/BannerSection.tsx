@@ -54,11 +54,7 @@ export default function BannerSection() {
                   alt={banner.imageAlt}
                   fill
                   priority={banner.id === 1}
-                  sizes="
-            (max-width: 640px) 100vw,
-            (max-width: 1024px) 100vw,
-            1200px
-          "
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px"
                   className="object-fill rounded-lg object-center"
                 />
               </div>

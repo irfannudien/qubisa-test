@@ -29,12 +29,9 @@ export default function CategorySection() {
         <p className="text-center">Loading...</p>
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4 overflow-x-auto no-scrollbar sm:flex-wrap sm:justify-center">
+          <div className="flex gap-4 overflow-x-auto no-scrollbar lg:flex-wrap lg:justify-center">
             {firstCategories.map((section, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[220px]"
-              >
+              <div key={index} className="flex-shrink-0 w-[160px] md:w-[18%]">
                 <CategoryCard section={section} />
               </div>
             ))}

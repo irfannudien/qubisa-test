@@ -25,10 +25,8 @@ interface Program {
 
 interface Price {
   isFree: boolean;
-  initialPrice: number;
-  initialPriceString: string;
-  finalPrice: number;
-  finalPriceString: string;
+  initialPrice: number | string;
+  finalPrice: number | string;
 }
 
 interface SkillLevel {
@@ -117,7 +115,7 @@ export default function BootcampSection() {
         <div className="flex">
           <button
             onClick={() => setActiveTab("Terbaru")}
-            className={`md:px-4 py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 text-md font-medium text-xs md:text-md lg:text-lg  ${
+            className={`md:px-4 py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 font-medium text-xs md:text-base lg:text-lg  ${
               activeTab === "Terbaru"
                 ? "text-[#BF1E2E] border-b-[#BF1E2E]"
                 : "text-[#373737] hover:border-b-[#BF1E2E]"
@@ -127,7 +125,7 @@ export default function BootcampSection() {
           </button>
           <button
             onClick={() => setActiveTab("Terpopuler")}
-            className={`px-4 py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 font-medium text-xs md:text-md lg:text-lg ${
+            className={`px-4 py-2 cursor-pointer border-b-2 border-transparent transition-colors duration-200 font-medium text-xs md:text-base lg:text-lg ${
               activeTab === "Terpopuler"
                 ? "text-[#BF1E2E] border-b-[#BF1E2E]"
                 : "text-[#373737] hover:border-b-[#BF1E2E]"
@@ -165,25 +163,34 @@ export default function BootcampSection() {
           <Swiper
             modules={[Navigation, Pagination]}
             navigation={!isMobile}
-            spaceBetween={24}
-            slidesPerView={3}
+            spaceBetween={16}
             loop
+            breakpoints={{
+              0: {
+                slidesPerView: 2.3,
+              },
+
+              640: {
+                slidesPerView: 2.8,
+              },
+
+              1024: {
+                slidesPerView: 3,
+              },
+            }}
             className="h-full swiper-product"
           >
-            {filteredContents.length ? (
-              filteredContents.map((item) => (
-                <SwiperSlide
-                  key={item.id}
-                  className="!w-[80%] sm:!w-[250px] md:!w-[300px]"
-                >
-                  <div className="flex flex-col h-full bg-white rounded-lg shadow-sm border-gray-400 p-4 gap-2">
-                    <div className="relative w-full h-40 flex-shrink-0">
+            {section.contents.length ? (
+              section.contents.map((item) => (
+                <SwiperSlide key={item.id}>
+                  <div className="flex flex-col w-full h-[350px] md:h-[400px] lg:h-full bg-white rounded-lg shadow-sm border-gray-400 p-1 md:p-2 lg:p-3 gap-2 sm:gap-3">
+                    <div className="relative w-full h-25 md:h-30 lg:h-40 flex-shrink-0">
                       {item.imageThumbUrl ? (
                         <Image
                           src={item.imageThumbUrl}
                           alt={item.title}
                           fill
-                          className="object-cover rounded"
+                          className="w-full h-full object-cover rounded"
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-100 flex items-center justify-center">
@@ -192,12 +199,12 @@ export default function BootcampSection() {
                       )}
                     </div>
 
-                    <div className="flex-1 flex flex-col justify-between">
-                      <div className="space-y-2">
-                        <div className="flex gap-2 text-xs">
+                    <div className="flex flex-col gap-1 md:gap-2 ">
+                      <div className="h-25 lg:h-18 flex flex-col gap-1">
+                        <div className="flex flex-wrap gap-1 md:gap-2">
                           {item.skillLevel && (
                             <span
-                              className="px-2 py-0.5 rounded-lg text-white"
+                              className="text-[8px] md:text-[10px] px-2 py-0.5 rounded-lg text-white"
                               style={{ background: item.skillLevel.color }}
                             >
                               {item.skillLevel.name}
@@ -205,7 +212,7 @@ export default function BootcampSection() {
                           )}
                           {item.category && (
                             <span
-                              className="px-2 py-0.5 rounded-lg text-white"
+                              className="text-[8px] md:text-[10px] px-2 py-0.5 rounded-lg text-white overflow-hidden"
                               style={{
                                 background: item.category.colorHex || "#666",
                               }}
@@ -214,65 +221,61 @@ export default function BootcampSection() {
                             </span>
                           )}
                         </div>
-
-                        <div className="cursor-pointer h-[74px] lg:max-h-[112px]">
-                          <h3 className="text-md font-medium line-clamp-2">
+                        <div className="cursor-pointer max-h-[50px] md:max-h-[60px] lg:max-h-[112px]">
+                          <h3 className="text-sm lg:text-lg lg:leading-6 font-medium line-clamp-3">
                             {item.title}
                           </h3>
                         </div>
+                      </div>
 
+                      <div className="flex flex-col gap-1 md:gap-3 lg:gap-5">
                         {item.rating?.avg ? (
                           <Rating rating={item.rating.avg} />
                         ) : (
-                          <div className="flex text-xs lg:text-sm lg:leading-6 text-blackBorder max-h-[28px] my-4 line-clamp-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                          <div className="text-[12px] lg:text-sm lg:leading-6 max-h-[28px] my-0 md:mt-2 lg:mt-7 overflow-hidden text-ellipsis whitespace-nowrap">
                             {item.eventDateString || "-"}
                           </div>
                         )}
 
-                        <div className="flex flex-col gap-5">
-                          {item.instructors && item.instructors.length > 0 && (
-                            <div className="flex items-center gap-2 mt-1">
-                              {item.instructors[0].profilePic && (
-                                <Image
-                                  src={item.instructors[0].profilePic}
-                                  alt={item.instructors[0].name}
-                                  width={24}
-                                  height={24}
-                                  className="rounded-full"
-                                />
-                              )}
-                              <div>
-                                <p className="overflow-hidden text-ellipsis whitespace-nowrap max-h-4 md:max-h-5 text-xs lg:text-sm font-semibold text-blackBorder text-left">
-                                  {item.instructors[0].name}
+                        {item.instructors && item.instructors.length > 0 && (
+                          <div className="flex items-center gap-2 mt-1">
+                            {item.instructors[0].profilePic && (
+                              <Image
+                                src={item.instructors[0].profilePic}
+                                alt={item.instructors[0].name}
+                                width={20}
+                                height={20}
+                                className="rounded-full w-8 h-8"
+                              />
+                            )}
+                            <div className="w-full">
+                              <p className="line-clamp-1 lg:line-clamp-none max-h-4 md:max-h-5 text-xs md:text-sm lg:text-sm font-semibold text-left">
+                                {item.instructors[0].name}
+                              </p>
+                              {item.instructors[0].qualification && (
+                                <p className="text-[10px] sm:text-xs hidden lg:block  max-h-4 overflow-hidden text-left">
+                                  {item.instructors[0].qualification}
                                 </p>
-                                {item.instructors[0].qualification && (
-                                  <p className="text-xs hidden lg:block text-blackBorder max-h-4 overflow-hidden text-left">
-                                    {item.instructors[0].qualification}
-                                  </p>
-                                )}
-                              </div>
+                              )}
                             </div>
-                          )}
+                          </div>
+                        )}
 
-                          <div className="mt-3 text-right">
-                            {item.price?.isFree ? (
-                              <span className="text-green-600 font-bold">
-                                Gratis
+                        <div className="mt-3">
+                          <div className="flex flex-col items-start lg:flex-row lg:justify-between">
+                            <span className="font-semibold text-gray-800 tex-sm md:text-lg">
+                              {typeof item.price?.finalPrice === "number"
+                                ? currencyFormat(item.price.finalPrice)
+                                : item.price?.finalPrice}
+                            </span>
+
+                            {item.price?.initialPrice !==
+                              item.price?.finalPrice && (
+                              <span className="text-gray-400 line-through text-xs md:text-sm lg:text-lg">
+                                {typeof item.price?.initialPrice === "number"
+                                  ? currencyFormat(item.price.initialPrice)
+                                  : item.price?.initialPrice}
                               </span>
-                            ) : (
-                              <div className="flex flex-row justify-between">
-                                <span className="font-semibold text-gray-800">
-                                  {item.price?.finalPriceString ??
-                                    currencyFormat(item.price?.finalPrice)}
-                                </span>
-                                {item.price?.initialPrice !==
-                                  item.price?.finalPrice && (
-                                  <span className="text-gray-400 line-through text-sm">
-                                    {item.price?.initialPriceString ??
-                                      currencyFormat(item.price?.initialPrice)}
-                                  </span>
-                                )}
-                              </div>
                             )}
                           </div>
                         </div>
